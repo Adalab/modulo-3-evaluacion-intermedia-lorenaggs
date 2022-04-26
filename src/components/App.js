@@ -9,11 +9,13 @@ function App() {
     character: "",
   });
   const [search, setSearch] = useState("");
+  // const [searchCharacter, setSearchCharacter] = useState(seriesTvApi.character);
 
   const html = seriesTvApi
     .filter((oneSerie) =>
       oneSerie.quote.toLowerCase().includes(search.toLowerCase())
     )
+    // .filter((oneCharacter) => oneCharacter(searchCharacter))
     .map((series, index) => {
       return (
         <li className="listApi" key={index}>
@@ -22,9 +24,12 @@ function App() {
         </li>
       );
     });
-  const htmlOptions = seriesTvApi.map((series, index) => {
-    return <option key={index}>{series.character}</option>;
-  });
+
+  // const htmlOptions = seriesTvApi.map((series, index) => {
+  //   let searchFilter = [];
+  //   if (searchFilter.includes[i])
+  //     return <option key={index}>{series.character}</option>;
+  // });
 
   const handleInputNewPhrase = (ev) => {
     setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
@@ -42,6 +47,10 @@ function App() {
   const handleSearch = (ev) => {
     setSearch(ev.target.value);
   };
+
+  // const handleClickFilter = (ev) => {
+  //   setSearchCharacter(ev.currentTarget.id);
+  // };
 
   return (
     <div className="App">
@@ -61,14 +70,57 @@ function App() {
             </div>
             <div>
               <label htmlFor="">Filtrar por personaje</label>
-              <input
-                type="text"
-                id="allsearch"
-                name="allsearch"
-                placeholder="Filtrar por personaje"
-              />
               <select name="" id="">
-                {htmlOptions}
+                {/* {htmlOptions} */}
+                <option
+                  id="option1"
+                  value="searchCharacter"
+                  // onClick={handleClickFilter}
+                >
+                  Todos
+                </option>
+                {/* <option
+                  id="option2"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Ross
+                </option> */}
+                {/* <option
+                  id="option3"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Monica
+                </option>
+                <option
+                  id="option4"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Joey
+                </option>
+                <option
+                  id="option5"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Phoebe
+                </option>
+                <option
+                  id="option6"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Chandlet
+                </option>
+                <option
+                  id="option7"
+                  value="searchCharacter"
+                  onClick={handleClickFilter}
+                >
+                  Rachel
+                </option> */}
               </select>
             </div>
           </div>
