@@ -25,11 +25,24 @@ function App() {
       );
     });
 
-  const htmlOptions = seriesTvApi.map((series, index) => {
-    let searchFilter = [];
-    // if (searchFilter.includes[i])
-    return <option key={index}>{series.character}</option>;
-  });
+  // const htmlOptions = seriesTvApi.map((series, index) => {
+  //   let searchFilter = [];
+  //   // if (searchFilter.includes[i])
+  //   return <option key={index}>{series.character}</option>;
+  // });
+
+  const htmlOptions = seriesTvApi
+    .reduce((characters, actual) => {
+      const validate = !characters.includes(actual.character);
+      if (validate) {
+        characters.push(actual.character);
+      }
+      return characters;
+      // console.log(cha);
+    }, [])
+    .map((character, index) => {
+      return <option key={index}>{character}</option>;
+    });
 
   const handleInputNewPhrase = (ev) => {
     setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
@@ -76,9 +89,7 @@ function App() {
                   id="option1"
                   value="searchCharacter"
                   // onClick={handleClickFilter}
-                >
-                  Todos
-                </option>
+                ></option>
                 {/* <option
                   id="option2"
                   value="searchCharacter"
