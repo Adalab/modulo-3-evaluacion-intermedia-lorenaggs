@@ -8,15 +8,22 @@ function App() {
     quote: "",
     character: "",
   });
-  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
 
-  const html = seriesTvApi.map((series, index) => {
-    return (
-      <li className="listApi" key={index}>
-        <p>{series.quote}</p>
-        <p>{series.character}</p>
-      </li>
-    );
+  const html = seriesTvApi
+    .filter((oneSerie) =>
+      oneSerie.quote.toLowerCase().includes(search.toLowerCase())
+    )
+    .map((series, index) => {
+      return (
+        <li className="listApi" key={index}>
+          <p>{series.quote}</p>
+          <p>{series.character}</p>
+        </li>
+      );
+    });
+  const htmlOptions = seriesTvApi.map((series, index) => {
+    return <option key={index}>{series.character}</option>;
   });
 
   const handleInputNewPhrase = (ev) => {
@@ -32,24 +39,38 @@ function App() {
     });
   };
 
+  const handleSearch = (ev) => {
+    setSearch(ev.target.value);
+  };
+
   return (
     <div className="App">
       <div>
         <div className="phraseFriends">
           <h1>Frases de Friends</h1>
           <div>
-            <input
-              type="text"
-              id="filterphrase"
-              name="filterphrase"
-              placeholder="Filtrar por frase"
-            />
-            <input
-              type="text"
-              id="allfilter"
-              name="allfilter"
-              placeholder="Filtrar por personaje"
-            />
+            <div>
+              <label htmlFor=""> Filtrar por frase</label>
+              <input
+                type="search"
+                autoComplete="off"
+                name="searchphrase"
+                value={search}
+                onChange={handleSearch}
+              />
+            </div>
+            <div>
+              <label htmlFor="">Filtrar por personaje</label>
+              <input
+                type="text"
+                id="allsearch"
+                name="allsearch"
+                placeholder="Filtrar por personaje"
+              />
+              <select name="" id="">
+                {htmlOptions}
+              </select>
+            </div>
           </div>
         </div>
       </div>
