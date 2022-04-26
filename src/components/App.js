@@ -25,11 +25,11 @@ function App() {
       );
     });
 
-  // const htmlOptions = seriesTvApi.map((series, index) => {
-  //   let searchFilter = [];
-  //   if (searchFilter.includes[i])
-  //     return <option key={index}>{series.character}</option>;
-  // });
+  const htmlOptions = seriesTvApi.map((series, index) => {
+    let searchFilter = [];
+    // if (searchFilter.includes[i])
+    return <option key={index}>{series.character}</option>;
+  });
 
   const handleInputNewPhrase = (ev) => {
     setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
@@ -71,7 +71,7 @@ function App() {
             <div>
               <label htmlFor="">Filtrar por personaje</label>
               <select name="" id="">
-                {/* {htmlOptions} */}
+                {htmlOptions}
                 <option
                   id="option1"
                   value="searchCharacter"
