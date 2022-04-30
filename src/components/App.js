@@ -12,6 +12,7 @@ function App() {
   // const [searchCharacter, setSearchCharacter] = useState(seriesTvApi.character);
 
   const html = seriesTvApi
+    // .filter(())
     .filter((oneSerie) =>
       oneSerie.quote.toLowerCase().includes(search.toLowerCase())
     )
@@ -84,12 +85,14 @@ function App() {
             <div>
               <label htmlFor="">Filtrar por personaje</label>
               <select name="" id="">
-                {htmlOptions}
                 <option
                   id="option1"
                   value="searchCharacter"
                   // onClick={handleClickFilter}
-                ></option>
+                >
+                  Todos
+                </option>
+                {htmlOptions}
                 {/* <option
                   id="option2"
                   value="searchCharacter"
