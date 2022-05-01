@@ -1,6 +1,7 @@
 import "../styles/App.scss";
 import apiSeries from "../services/api.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import callToApi from "../services/ApiData";
 
 function App() {
   const [seriesTvApi, setSeriesTvApi] = useState(apiSeries);
@@ -9,8 +10,16 @@ function App() {
     character: "",
   });
   const [search, setSearch] = useState("");
+  const [data, setData] = useState([callToApi]);
   // const [searchCharacter, setSearchCharacter] = useState(seriesTvApi.character);
 
+  useEffect(() => {
+    callToApi().then((response) => {
+      setData(response);
+    });
+  }, []);
+
+  console.log(setData);
   const html = seriesTvApi
     // .filter(())
     .filter((oneSerie) =>
@@ -26,6 +35,16 @@ function App() {
       );
     });
 
+  // comprobación de llamada a APi con fetch
+  const html2 = data.map((data, index) => {
+    return (
+      <li className="listApi" key={index}>
+        <p>{data.quote}</p>
+        <p>{data.character}</p>
+      </li>
+    );
+  });
+
   // const htmlOptions = seriesTvApi.map((series, index) => {
   //   let searchFilter = [];
   //   // if (searchFilter.includes[i])
@@ -39,7 +58,6 @@ function App() {
         characters.push(actual.character);
       }
       return characters;
-      // console.log(cha);
     }, [])
     .map((character, index) => {
       return <option key={index}>{character}</option>;
@@ -68,39 +86,39 @@ function App() {
 
   return (
     <div className="App">
-      <div>
-        <div className="phraseFriends">
+      {html2}
+      <div className="phraseFriends">
+        <header>
           <h1>Frases de Friends</h1>
-          <div>
-            <div>
-              <label htmlFor=""> Filtrar por frase</label>
-              <input
-                type="search"
-                autoComplete="off"
-                name="searchphrase"
-                value={search}
-                onChange={handleSearch}
-              />
-            </div>
-            <div>
-              <label htmlFor="">Filtrar por personaje</label>
-              <select name="" id="">
-                <option
-                  id="option1"
-                  value="searchCharacter"
-                  // onClick={handleClickFilter}
-                >
-                  Todos
-                </option>
-                {htmlOptions}
-                {/* <option
+        </header>
+
+        <form action="">
+          <label htmlFor=""> Filtrar por frase</label>
+          <input
+            type="search"
+            autoComplete="off"
+            name="searchphrase"
+            value={search}
+            onChange={handleSearch}
+          />
+          <label htmlFor="">Filtrar por personaje</label>
+          <select name="" id="">
+            <option
+              id="option1"
+              value="searchCharacter"
+              // onClick={handleClickFilter}
+            >
+              Todos
+            </option>
+            {htmlOptions}
+            {/* <option
                   id="option2"
                   value="searchCharacter"
                   onClick={handleClickFilter}
                 >
                   Ross
                 </option> */}
-                {/* <option
+            {/* <option
                   id="option3"
                   value="searchCharacter"
                   onClick={handleClickFilter}
@@ -135,41 +153,36 @@ function App() {
                 >
                   Rachel
                 </option> */}
-              </select>
-            </div>
-          </div>
-        </div>
+          </select>
+        </form>
       </div>
       <ul>{html}</ul>
-      <form className="form">
-        <h2>Añadir una nueva frase</h2>
-        <div>
-          <label htmlFor="">Frase</label>
-          <input
-            type="text"
-            id="quote"
-            name="quote"
-            value={newPhrase.quote}
-            onChange={handleInputNewPhrase}
-          />
-        </div>
-        <div>
-          <label htmlFor="">Personaje</label>
-          <input
-            type="text"
-            id="character"
-            name="character"
-            value={newPhrase.character}
-            onChange={handleInputNewPhrase}
-          />
-        </div>
+      {/* <form className="form"> */}
+      <h2>Añadir una nueva frase</h2>
+      <form action="">
+        <label htmlFor="">Frase</label>
         <input
-          className="btnAdd"
-          type="submit"
-          value="Añadir una nueva frase"
-          onClick={handleAddNewPhrase}
+          type="text"
+          id="quote"
+          name="quote"
+          value={newPhrase.quote}
+          onChange={handleInputNewPhrase}
+        />
+        <label htmlFor="">Personaje</label>
+        <input
+          type="text"
+          id="character"
+          name="character"
+          value={newPhrase.character}
+          onChange={handleInputNewPhrase}
         />
       </form>
+      <input
+        className="btnAdd"
+        type="submit"
+        value="Añadir una nueva frase"
+        onClick={handleAddNewPhrase}
+      ></input>
     </div>
   );
 }
