@@ -4,71 +4,75 @@ import callToApi from "../services/ApiData";
 import localStorage from "../services/localStorage";
 
 function App() {
-  const [seriesTvApi, setSeriesTvApi] = useState([]);
-  const [newPhrase, setnewPhrase] = useState({
-    quote: "",
-    character: "",
-  });
-  const [search, setSearch] = useState("");
-  const [characterSelect, setCharacterSelect] = useState("");
-
-  useEffect(() => {
-    callToApi().then((response) => {
-      setSeriesTvApi(response);
-    });
-  }, []);
-
-  const html = seriesTvApi
-    .filter((oneSerie) =>
-      oneSerie.quote.toLowerCase().includes(search.toLowerCase())
-    )
-    .filter((searchCharacter) => {
-      if (characterSelect === "Todos") {
-        return searchCharacter;
-      }
-      return searchCharacter.character.includes(characterSelect);
-    })
-    .map((series, index) => {
-      return (
-        <li className="listApi" key={index} id={series.character}>
-          <p>{series.quote}</p>
-          <p>{series.character}</p>
-        </li>
-      );
-    });
-
-  const htmlOptions = seriesTvApi
-    .reduce((characters, actual) => {
-      const validate = !characters.includes(actual.character);
-      if (validate) {
-        characters.push(actual.character);
-      }
-      return characters;
-    }, [])
-    .map((character, index) => {
-      return (
-        <option key={index} id={character}>
-          {character}
-        </option>
-      );
-    });
-
-  const handleInputNewPhrase = (ev) => {
-    setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
-  };
-
-  const hadleSelectCharacter = (ev) => {
-    setCharacterSelect(ev.target.value);
-  };
-
-  const handleAddNewPhrase = (ev) => {
-    ev.preventDefault();
-    setSeriesTvApi([...seriesTvApi, newPhrase]);
-    setnewPhrase({
+    const localStoragePhrases = localStorage.get("addPhrase", []);
+    const [seriesTvApi, setSeriesTvApi] = useState(localStoragePhrases);
+    const [newPhrase, setnewPhrase] = useState({
       quote: "",
       character: "",
     });
-  };
+    const [search, setSearch] = useState("");
+    const [characterSelect, setCharacterSelect] = useState("");
+
+    useEffect(() => {
+      callToApi().then((response) => {
+        setSeriesTvApi([...response, ...seriesTvApi]);
+      });
+    }, []);
+
+    const html = seriesTvApi
+      .filter((oneSerie) =>
+        oneSerie.quote.toLowerCase().includes(search.toLowerCase())
+      )
+      .filter((searchCharacter) => {
+        if (characterSelect === "Todos") {
+          return searchCharacter;
+        }
+        return searchCharacter.character.includes(characterSelect);
+      })
+      .map((series, index) => {
+        return (
+          <li className="listApi" key={index} id={series.character}>
+            <p>{series.quote}</p>
+            <p>{series.character}</p>
+          </li>
+        );
+      });
+
+    const htmlOptions = seriesTvApi
+      .reduce((characters, actual) => {
+        const validate = !characters.includes(actual.character);
+        if (validate) {
+          characters.push(actual.character);
+        }
+        return characters;
+      }, [])
+      .map((character, index) => {
+        return (
+          <option key={index} id={character}>
+            {character}
+          </option>
+        );
+      });
+
+    const handleInputNewPhrase = (ev) => {
+      setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
+    };
+
+    const hadleSelectCharacter = (ev) => {
+      setCharacterSelect(ev.target.value);
+    };
+
+    const handleAddNewPhrase = (ev) => {
+      ev.preventDefault();
+      setSeriesTvApi([...seriesTvApi, newPhrase]);
+
+      localStorage.set("addPhrase", [...localStoragePhrases, newPhrase]);
+
+      setnewPhrase({
+        quote: "",
+        character: "",
+      });
+    };
 
   const handleSearch = (ev) => {
     setSearch(ev.target.value);
