@@ -1,55 +1,41 @@
 import "../styles/App.scss";
-import apiSeries from "../services/api.json";
 import { useState, useEffect } from "react";
 import callToApi from "../services/ApiData";
+import localStorage from "../services/localStorage";
 
 function App() {
-  const [seriesTvApi, setSeriesTvApi] = useState(apiSeries);
+  const [seriesTvApi, setSeriesTvApi] = useState([]);
   const [newPhrase, setnewPhrase] = useState({
     quote: "",
     character: "",
   });
   const [search, setSearch] = useState("");
-  const [data, setData] = useState([callToApi]);
-  // const [searchCharacter, setSearchCharacter] = useState(seriesTvApi.character);
+  const [characterSelect, setCharacterSelect] = useState("");
 
   useEffect(() => {
     callToApi().then((response) => {
-      setData(response);
+      setSeriesTvApi(response);
     });
   }, []);
 
-  console.log(setData);
   const html = seriesTvApi
-    // .filter(())
     .filter((oneSerie) =>
       oneSerie.quote.toLowerCase().includes(search.toLowerCase())
     )
-    // .filter((oneCharacter) => oneCharacter(searchCharacter))
+    .filter((searchCharacter) => {
+      if (characterSelect === "Todos") {
+        return searchCharacter;
+      }
+      return searchCharacter.character.includes(characterSelect);
+    })
     .map((series, index) => {
       return (
-        <li className="listApi" key={index}>
+        <li className="listApi" key={index} id={series.character}>
           <p>{series.quote}</p>
           <p>{series.character}</p>
         </li>
       );
     });
-
-  // comprobación de llamada a APi con fetch
-  const html2 = data.map((data, index) => {
-    return (
-      <li className="listApi" key={index}>
-        <p>{data.quote}</p>
-        <p>{data.character}</p>
-      </li>
-    );
-  });
-
-  // const htmlOptions = seriesTvApi.map((series, index) => {
-  //   let searchFilter = [];
-  //   // if (searchFilter.includes[i])
-  //   return <option key={index}>{series.character}</option>;
-  // });
 
   const htmlOptions = seriesTvApi
     .reduce((characters, actual) => {
@@ -60,11 +46,19 @@ function App() {
       return characters;
     }, [])
     .map((character, index) => {
-      return <option key={index}>{character}</option>;
+      return (
+        <option key={index} id={character}>
+          {character}
+        </option>
+      );
     });
 
   const handleInputNewPhrase = (ev) => {
     setnewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
+  };
+
+  const hadleSelectCharacter = (ev) => {
+    setCharacterSelect(ev.target.value);
   };
 
   const handleAddNewPhrase = (ev) => {
@@ -80,13 +74,8 @@ function App() {
     setSearch(ev.target.value);
   };
 
-  // const handleClickFilter = (ev) => {
-  //   setSearchCharacter(ev.currentTarget.id);
-  // };
-
   return (
     <div className="App">
-      {html2}
       <div className="phraseFriends">
         <header>
           <h1>Frases de Friends</h1>
@@ -102,62 +91,14 @@ function App() {
             onChange={handleSearch}
           />
           <label htmlFor="">Filtrar por personaje</label>
-          <select name="" id="">
-            <option
-              id="option1"
-              value="searchCharacter"
-              // onClick={handleClickFilter}
-            >
-              Todos
-            </option>
+          <select onChange={hadleSelectCharacter}>
+            <option id="all">Todos</option>
             {htmlOptions}
-            {/* <option
-                  id="option2"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Ross
-                </option> */}
-            {/* <option
-                  id="option3"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Monica
-                </option>
-                <option
-                  id="option4"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Joey
-                </option>
-                <option
-                  id="option5"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Phoebe
-                </option>
-                <option
-                  id="option6"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Chandlet
-                </option>
-                <option
-                  id="option7"
-                  value="searchCharacter"
-                  onClick={handleClickFilter}
-                >
-                  Rachel
-                </option> */}
           </select>
         </form>
       </div>
       <ul>{html}</ul>
-      {/* <form className="form"> */}
+
       <h2>Añadir una nueva frase</h2>
       <form action="">
         <label htmlFor="">Frase</label>
